@@ -1,6 +1,19 @@
 import requests
 
 def ollama_query(model, prompt, system_message=None, host="localhost", port=11434):
+    """ 
+    Query the ollama API with a prompt and return the response. 
+
+    PARAMS:
+        model: The name of the model to use.
+        prompt: The prompt to send to the model.
+        system_message: The system message to send to the model.
+        host: The host to send the request to.
+        port: The port to send the request to.
+    RETURNS:
+        The response from the model.
+        Debug text
+    """
     url = f"http://{host}:{port}/api/generate"
     headers = {"Content-Type": "application/json"}
     data = {

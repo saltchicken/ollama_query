@@ -27,7 +27,7 @@ def ollama_query(model, prompt, system_message=None, host="localhost", port=1143
     response = requests.post(url, headers=headers, json=data)
     response = response.json()
 
-    debug_string = pretty_print_prompt(prompt, system_message, response)
+    debug_string = pretty_print_prompt(prompt, system_message, response.get("response", None))
     return response.get("response", None), debug_string
 
 def pretty_print_prompt(prompt, system_message, response):

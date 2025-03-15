@@ -1,4 +1,5 @@
 import requests
+import time
 
 def ollama_query(model, prompt, system_message=None, host="localhost", port=11434):
     """ 
@@ -23,14 +24,16 @@ def ollama_query(model, prompt, system_message=None, host="localhost", port=1143
     }
     if system_message:
         data["system"] = system_message
-    print(f"Data: {data}")
+    start_time = time.perf_counter()
     response = requests.post(url, headers=headers, json=data)
+    end_time = time.perf_counter()
+    elapsed_time = end_time - start_time
     response = response.json()
 
-    debug_string = pretty_print_prompt(prompt, system_message, response.get("response", None))
+    debug_string = pretty_print_prompt(prompt, system_message, response.get("response", None), elapsed_time)
     return response.get("response", None), debug_string
 
-def pretty_print_prompt(prompt, system_message, response):
+def pretty_print_prompt(prompt, system_message, response, elapsed_time):
     """Pretty print the prompt, system message, and response."""
     if system_message:
         estimated_tokens =  estimate_token_length(system_message) + estimate_token_length(prompt)
@@ -38,6 +41,7 @@ def pretty_print_prompt(prompt, system_message, response):
         estimated_tokens = estimate_token_length(prompt)
     debug_string = f"""
     Estimated tokens: {estimated_tokens}
+    Elapsed time: {elapsed_time:.2f} seconds
     -------SYSTEM MESSAGE--------
      {system_message}
     ----------PROMPT---------

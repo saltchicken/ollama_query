@@ -24,23 +24,39 @@ def ollama_query(model, prompt, system_message=None, host="localhost", port=1143
     }
     if system_message:
         data["system"] = system_message
+    # TODO: How can I get the default system message?
     start_time = time.perf_counter()
-    response = requests.post(url, headers=headers, json=data)
+    result = requests.post(url, headers=headers, json=data)
     end_time = time.perf_counter()
     elapsed_time = end_time - start_time
-    response = response.json()
+    result = result.json()
 
-    debug_string = pretty_print_prompt(prompt, system_message, response.get("response", None), elapsed_time)
-    return response.get("response", None), debug_string
+    input_tokens = result.get("prompt_tokens", 0)
+    output_tokens = result.get("eval_tokens", 0)
+    response = result.get("response", None)
 
-def pretty_print_prompt(prompt, system_message, response, elapsed_time):
-    """Pretty print the prompt, system message, and response."""
-    if system_message:
-        estimated_tokens =  estimate_token_length(system_message) + estimate_token_length(prompt)
-    else:
-        estimated_tokens = estimate_token_length(prompt)
+    debug_string = evaluate_debug_string(prompt, system_message, response, elapsed_time, input_tokens, output_tokens)
+    return response, debug_string
+
+def evaluate_debug_string(prompt, system_message, response, elapsed_time, input_tokens, output_tokens):
+    """ 
+    Evaluate the debug string for the ollama query. 
+
+    PARAMS:
+        prompt: The prompt that was sent to the model.
+        system_message: The system message that was sent to the model.
+        response: The response from the model.
+        elapsed_time: The elapsed time for the query.
+        input_tokens: The number of input tokens.
+        output_tokens: The number of output tokens.
+    RETURNS:
+        The debug string.
+    """
+    tokens_per_second = output_tokens / elapsed_time if elapsed_time > 0 else 0
     debug_string = f"""
-Estimated tokens: {estimated_tokens}
+--------STATS--------
+Input tokens: {input_tokens}
+Tokens per second: {tokens_per_second:.2f}
 Elapsed time: {elapsed_time:.2f} seconds
 -------SYSTEM MESSAGE--------
 {system_message}
@@ -50,8 +66,3 @@ Elapsed time: {elapsed_time:.2f} seconds
 {response}
 """
     return debug_string
-
-def estimate_token_length(text: str) -> int:
-    """Estimate the number of tokens in a string."""
-    avg_chars_per_token = 4
-    return max(1, len(text) // avg_chars_per_token)

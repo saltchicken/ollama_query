@@ -1,0 +1,4 @@
+Metadata-Version: 2.2
+Name: ollama_query
+Version: 0.1.1
+Requires-Dist: requests

@@ -27,10 +27,10 @@ def ollama_query(model, prompt, system_message=None, host="localhost", port=1143
     # TODO: How can I get the default system message?
     start_time = time.perf_counter()
     result = requests.post(url, headers=headers, json=data)
-    print(result)
     end_time = time.perf_counter()
     elapsed_time = end_time - start_time
     result = result.json()
+    print(result)
 
     input_tokens = result.get("prompt_tokens", 0)
     output_tokens = result.get("eval_tokens", 0)

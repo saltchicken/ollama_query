@@ -40,15 +40,15 @@ def pretty_print_prompt(prompt, system_message, response, elapsed_time):
     else:
         estimated_tokens = estimate_token_length(prompt)
     debug_string = f"""
-    Estimated tokens: {estimated_tokens}
-    Elapsed time: {elapsed_time:.2f} seconds
-    -------SYSTEM MESSAGE--------
-     {system_message}
-    ----------PROMPT---------
-     {prompt}
-    ----------RESPONSE---------
-     {response}
-    """
+Estimated tokens: {estimated_tokens}
+Elapsed time: {elapsed_time:.2f} seconds
+-------SYSTEM MESSAGE--------
+{system_message}
+----------PROMPT---------
+{prompt}
+----------RESPONSE---------
+{response}
+"""
     return debug_string
 
 def estimate_token_length(text: str) -> int:

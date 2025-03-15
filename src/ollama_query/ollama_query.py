@@ -31,6 +31,7 @@ def ollama_query(model, prompt, system_message=None, host="localhost", port=1143
     return response.get("response", None), debug_string
 
 def pretty_print_prompt(prompt, system_message, response):
+    """Pretty print the prompt, system message, and response."""
     if system_message:
         estimated_tokens =  estimate_token_length(system_message) + estimate_token_length(prompt)
     else:

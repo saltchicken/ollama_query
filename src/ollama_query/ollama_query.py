@@ -27,6 +27,7 @@ def ollama_query(model, prompt, system_message=None, host="localhost", port=1143
     # TODO: How can I get the default system message?
     start_time = time.perf_counter()
     result = requests.post(url, headers=headers, json=data)
+    print(result)
     end_time = time.perf_counter()
     elapsed_time = end_time - start_time
     result = result.json()

@@ -1,6 +1,6 @@
 import requests
 
-def ollama_query(model, prompt, system_message=None, host="localhost", port=11434):
+def ollama_query(model, prompt, system_message=None, host="localhost", port=11434, temperature=None):
     """ 
     Query the ollama API with a prompt and return the response. 
 
@@ -10,6 +10,7 @@ def ollama_query(model, prompt, system_message=None, host="localhost", port=1143
         system_message: The system message to send to the model.
         host: The host to send the request to.
         port: The port to send the request to.
+        temperature: Controls randomness of the model. Lower values will make the model more deterministic. Range: 0 to 1. Defaults to settings from Modelfile.
     RETURNS:
         The response from the model.
         Debug text
@@ -23,6 +24,8 @@ def ollama_query(model, prompt, system_message=None, host="localhost", port=1143
     }
     if system_message:
         data["system"] = system_message
+    if temperature:
+        data["options"] = {"temperature": temperature}
     # TODO: How can I get the default system message?
     result = requests.post(url, headers=headers, json=data)
     result = result.json()

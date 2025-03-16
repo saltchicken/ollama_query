@@ -28,6 +28,7 @@ def ollama_query(model, prompt, system_message=None, host="localhost", port=1143
         data["options"] = {"temperature": temperature}
     # TODO: How can I get the default system message?
     result = requests.post(url, headers=headers, json=data)
+    print(result)
     result = result.json()
 
     response = result.get("response", None)
